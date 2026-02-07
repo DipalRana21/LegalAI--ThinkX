@@ -1,0 +1,18 @@
+streamlit>=1.28.0
+langchain>=0.1.0
+langchain-core>=0.1.0
+langchain-google-genai>=0.0.6
+langchain-community>=0.0.10
+langchain-text-splitters>=0.0.1
+faiss-cpu>=1.7.4
+pypdf>=3.17.0
+python-dotenv>=1.0.0
+google-generativeai>=0.3.0
+tiktoken>=0.5.0
+sentence-transformers>=2.2.0
+torch>=2.0.0,<2.5.0
+transformers>=4.40.0,<5.0.0
+tokenizers>=0.19.0,<0.22.0
+# Avoid TensorFlow compatibility issues - we don't need it
+# tensorflow>=2.13.0,<2.16.0; platform_system != "Windows"
+
