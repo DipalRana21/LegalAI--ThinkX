@@ -1,0 +1,378 @@
+"""
+Language Strings and UI Translations
+Provides internationalized strings for the LegalAI application
+"""
+
+from typing import Dict, Optional
+
+# UI Translation Strings for all supported languages
+LANGUAGE_STRINGS: Dict[str, Dict[str, str]] = {
+    'en': {
+        'app_title': 'NyayaSahayak - Indian Legal Assistant',
+        'app_subtitle': 'Intelligent Legal Assistance for Indian Laws',
+        'language_selector': 'Select Language',
+        'voice_separator': 'Voice Input',
+        'voice_input_label': '🎤 Voice Input',
+        'voice_language': 'Voice Input Language',
+        'click_to_speak': 'Click to Speak',
+        'response_language': '🌐 Response Language',
+        'get_responses_in': 'Get responses in:',
+        'submit_query': 'Ask a Legal Question',
+        'clear_chat': 'Clear Chat History',
+        'upload_document': 'Upload Document',
+        'ask_question': 'Ask me anything about Indian laws...',
+        'processing': 'Processing your query...',
+        'error_occurred': 'An error occurred',
+        'success': 'Success',
+        'warning': 'Warning',
+        'related_sections': 'Related Legal Sections',
+        'no_results': 'No relevant information found',
+        'chat_history': 'Chat History',
+        'settings': 'Settings',
+        'about': 'About',
+        'help': 'Help',
+        'search': 'Search',
+        'filter': 'Filter',
+        'sort': 'Sort',
+        'export': 'Export',
+        'share': 'Share',
+        'copy': 'Copy',
+        'delete': 'Delete',
+        'edit': 'Edit',
+        'cancel': 'Cancel',
+        'confirm': 'Confirm',
+        'loading': 'Loading...',
+        'try_again': 'Try Again',
+        'back': 'Back',
+        'next': 'Next',
+        'previous': 'Previous',
+        'document_sources': 'Document Sources',
+        'confidence': 'Confidence',
+        'relevance': 'Relevance',
+        'powered_by': 'Powered by Gemini AI & LangChain RAG',
+        'civil_criminal': 'Civil vs Criminal',
+        'civil_criminal_title': 'Civil vs Criminal Cases',
+        'civil_criminal_subtitle': 'Complete Guide to Understanding Civil and Criminal Law Systems in India',
+    },
+    'hi': {
+        'app_title': 'न्यायसहायक - भारतीय कानूनी सहायक',
+        'app_subtitle': 'भारतीय कानूनों के लिए बुद्धिमान कानूनी सहायता',
+        'language_selector': 'भाषा चुनें',
+        'voice_separator': 'आवाज़ इनपुट',
+        'voice_input_label': '🎤 आवाज़ इनपुट',
+        'voice_language': 'आवाज़ इनपुट की भाषा',
+        'click_to_speak': 'बोलने के लिए क्लिक करें',
+        'response_language': '🌐 प्रतिक्रिया की भाषा',
+        'get_responses_in': 'इसमें प्रतिक्रिया प्राप्त करें:',
+        'submit_query': 'कानूनी प्रश्न पूछें',
+        'clear_chat': 'चैट इतिहास साफ़ करें',
+        'upload_document': 'दस्तावेज़ अपलोड करें',
+        'ask_question': 'मुझसे भारतीय कानूनों के बारे में कुछ भी पूछें...',
+        'processing': 'आपकी क्वेरी को प्रोसेस कर रहे हैं...',
+        'error_occurred': 'एक त्रुटि हुई',
+        'success': 'सफल',
+        'warning': 'चेतावनी',
+        'related_sections': 'संबंधित कानूनी अनुभाग',
+        'no_results': 'कोई प्रासंगिक जानकारी नहीं मिली',
+        'chat_history': 'चैट इतिहास',
+        'settings': 'सेटिंग्स',
+        'about': 'के बारे में',
+        'help': 'सहायता',
+        'search': 'खोजें',
+        'filter': 'फ़िल्टर',
+        'sort': 'क्रमबद्ध करें',
+        'export': 'निर्यात',
+        'share': 'साझा करें',
+        'copy': 'कॉपी करें',
+        'delete': 'हटाएं',
+        'edit': 'संपादित करें',
+        'cancel': 'रद्द करें',
+        'confirm': 'पुष्टि करें',
+        'loading': 'लोड हो रहा है...',
+        'try_again': 'फिर से प्रयास करें',
+        'back': 'वापस',
+        'next': 'अगला',
+        'previous': 'पिछला',
+        'document_sources': 'दस्तावेज़ स्रोत',
+        'confidence': 'आत्मविश्वास',
+        'relevance': 'प्रासंगिकता',
+        'powered_by': 'Gemini AI & LangChain RAG द्वारा संचालित',
+        'civil_criminal': 'दीवानी बनाम आपराधिक',
+        'civil_criminal_title': 'दीवानी बनाम आपराधिक मामले',
+        'civil_criminal_subtitle': 'भारत में दीवानी और आपराधिक कानून प्रणाली को समझने के लिए पूर्ण मार्गदर्शन',
+    },
+    'bn': {
+        'app_title': 'ন্যায়সহায়ক - ভারতীয় আইনি সহায়তা',
+        'app_subtitle': 'ভারতীয় আইনের জন্য বুদ্ধিমান আইনি সহায়তা',
+        'language_selector': 'ভাষা নির্বাচন করুন',
+        'voice_separator': 'ভয়েস ইনপুট',
+        'voice_input_label': '🎤 ভয়েস ইনপুট',
+        'voice_language': 'ভয়েস ইনপুট ভাষা',
+        'click_to_speak': 'কথা বলতে ক্লিক করুন',
+        'response_language': '🌐 প্রতিক্রিয়া ভাষা',
+        'get_responses_in': 'এতে প্রতিক্রিয়া পান:',
+        'submit_query': 'একটি আইনি প্রশ্ন জিজ্ঞাসা করুন',
+        'clear_chat': 'চ্যাট ইতিহাস সাফ করুন',
+        'upload_document': 'ডকুমেন্ট আপলোড করুন',
+        'ask_question': 'ভারতীয় আইন সম্পর্কে আমাকে যেকোনো প্রশ্ন জিজ্ঞাসা করুন...',
+        'processing': 'আপনার প্রশ্ন প্রক্রিয়া করছি...',
+        'error_occurred': 'একটি ত্রুটি ঘটেছে',
+        'success': 'সফল',
+        'warning': 'সতর্কতা',
+        'related_sections': 'সম্পর্কিত আইনি বিভাগ',
+        'no_results': 'কোনো প্রাসঙ্গিক তথ্য পাওয়া যায়নি',
+        'chat_history': 'চ্যাট ইতিহাস',
+        'settings': 'সেটিংস',
+        'about': 'সম্পর্কে',
+        'help': 'সাহায্য',
+        'search': 'অনুসন্ধান',
+        'filter': 'ফিল্টার',
+        'sort': 'সাজান',
+        'export': 'রপ্তানি',
+        'share': 'শেয়ার করুন',
+        'copy': 'অনুলিপি',
+        'delete': 'মুছুন',
+        'edit': 'সম্পাদনা',
+        'cancel': 'বাতিল',
+        'confirm': 'নিশ্চিত করুন',
+        'loading': 'লোড হচ্ছে...',
+        'try_again': 'আবার চেষ্টা করুন',
+        'back': 'ফিরে যান',
+        'next': 'পরবর্তী',
+        'previous': 'পূর্ববর্তী',
+        'document_sources': 'ডকুমেন্ট উৎস',
+        'confidence': 'আত্মবিশ্বাস',
+        'relevance': 'প্রাসঙ্গিকতা',
+        'powered_by': 'Gemini AI & LangChain RAG দ্বারা চালিত',
+        'civil_criminal': 'দেওয়ানী বনাম ফৌজদারী',
+        'civil_criminal_title': 'দেওয়ানী বনাম ফৌজদারী মামলা',
+        'civil_criminal_subtitle': 'ভারতে দেওয়ানী এবং ফৌজদারী আইন ব্যবস্থা বোঝার জন্য সম্পূর্ণ গাইড',
+    },
+    'ta': {
+        'app_title': 'நீதிசहায়ক - இந்திய правने உதவி',
+        'app_subtitle': 'இந்திய சட்டங்களுக்கான அறிவுசாரான சட்ட உதவி',
+        'language_selector': 'மொழியைத் தேர்ந்தெடுக்கவும்',
+        'voice_separator': 'குரல் உள்ளீடு',
+        'voice_input_label': '🎤 குரல் உள்ளீடு',
+        'voice_language': 'குரல் உள்ளீட்டு மொழி',
+        'click_to_speak': 'பேசுவதற்குக் கிளிக் செய்யவும்',
+        'response_language': '🌐 பதிலளிப்பு மொழி',
+        'get_responses_in': 'இதில் பதிலளிப்பு பெறவும்:',
+        'submit_query': 'சட்ட கேள்வி கேளுங்கள்',
+        'clear_chat': 'சட்ட வரலாற்றை அழிக்கவும்',
+        'upload_document': 'ஆவணத்தை பதிவேற்றவும்',
+        'ask_question': 'இந்திய சட்டங்களைப் பற்றி எனக்கு எதையாவது கேளுங்கள்...',
+        'processing': 'உங்கள் கேள்வியை செயல்படுத்தி வருகிறேன்...',
+        'error_occurred': 'பிழை ஏற்பட்டது',
+        'success': 'வெற்றி',
+        'warning': 'எச்சரிக்கை',
+        'related_sections': 'தொடர்புடைய சட்ட பிரிவுகள்',
+        'no_results': 'தொடர்புடைய தகவல் கிடைக்கவில்லை',
+        'chat_history': 'சட்ட வரலாறு',
+        'settings': 'அமைப்புகள்',
+        'about': 'பற்றி',
+        'help': 'உதவி',
+        'search': 'தேடல்',
+        'filter': 'வடிகால்',
+        'sort': 'வரிசைப்படுத்தவும்',
+        'export': 'ஆண்டுக்கு',
+        'share': 'பகிர்ந்து கொள்ளவும்',
+        'copy': 'நகலெடுக்கவும்',
+        'delete': 'நீக்கவும்',
+        'edit': 'திருத்தவும்',
+        'cancel': 'ரத்து செய்யவும்',
+        'confirm': 'உறுதிப்படுத்தவும்',
+        'loading': 'ஏற்றுதல்...',
+        'try_again': 'மீண்டும் முயற்சி செய்யவும்',
+        'back': 'பின்னால்',
+        'next': 'அடுத்த',
+        'previous': 'முந்தைய',
+        'document_sources': 'ஆவண மூலங்கள்',
+        'confidence': 'நம்பிக்கை',
+        'relevance': 'பொருத்தம்',
+        'powered_by': 'Gemini AI & LangChain RAG இதன் மூலம் இயக்கப்படுகிறது',
+        'civil_criminal': 'சிவில் எதிரா குற்றவியல்',
+        'civil_criminal_title': 'சிவில் எதிரா குற்றவியல் வழக்குகள்',
+        'civil_criminal_subtitle': 'இந்தியாவில் சிவில் மற்றும் குற்றவியல் சட்ட அமைப்புகளை புரிந்துகொள்ள முழு வழிகாட்டி',
+    },
+}
+
+# Legal-specific terminology translations
+LEGAL_TERMS: Dict[str, Dict[str, str]] = {
+    'en': {
+        'section': 'Section',
+        'article': 'Article',
+        'chapter': 'Chapter',
+        'part': 'Part',
+        'schedule': 'Schedule',
+        'act': 'Act',
+        'rule': 'Rule',
+        'provision': 'Provision',
+        'amendment': 'Amendment',
+        'clause': 'Clause',
+        'petition': 'Petition',
+        'jurisdiction': 'Jurisdiction',
+        'precedent': 'Precedent',
+        'bail': 'Bail',
+        'offense': 'Offense',
+        'punishment': 'Punishment',
+        'fine': 'Fine',
+        'imprisonment': 'Imprisonment',
+        'verdict': 'Verdict',
+        'appeal': 'Appeal',
+    },
+    'hi': {
+        'section': 'धारा',
+        'article': 'अनुच्छेद',
+        'chapter': 'अध्याय',
+        'part': 'भाग',
+        'schedule': 'अनुसूची',
+        'act': 'अधिनियम',
+        'rule': 'नियम',
+        'provision': 'प्रावधान',
+        'amendment': 'संशोधन',
+        'clause': 'खंड',
+        'petition': 'याचिका',
+        'jurisdiction': 'क्षेत्राधिकार',
+        'precedent': 'पूर्वनिर्धारण',
+        'bail': 'जमानत',
+        'offense': 'अपराध',
+        'punishment': 'सजा',
+        'fine': 'जुर्माना',
+        'imprisonment': 'कारावास',
+        'verdict': 'सजा',
+        'appeal': 'अपील',
+    },
+    'bn': {
+        'section': 'ধারা',
+        'article': 'অনুচ্ছেদ',
+        'chapter': 'অধ্যায়',
+        'part': 'অংশ',
+        'schedule': 'সময়সূচী',
+        'act': 'আইন',
+        'rule': 'নিয়ম',
+        'provision': 'বিধান',
+        'amendment': 'সংশোধন',
+        'clause': 'ধারা',
+        'petition': 'আবেদন',
+        'jurisdiction': 'ক্ষেত্রাধিকার',
+        'precedent': 'পূর্বাভাস',
+        'bail': 'জামিন',
+        'offense': 'অপরাধ',
+        'punishment': 'শাস্তি',
+        'fine': 'জরিমানা',
+        'imprisonment': 'কারাদণ্ড',
+        'verdict': 'রায়',
+        'appeal': 'আবেদন',
+    },
+}
+
+# Emergency Contacts and Help Numbers
+EMERGENCY_CONTACTS: Dict[str, Dict[str, str]] = {
+    'en': {
+        'title': '📞 Emergency & Help',
+        'police': '🚨 Police',
+        'police_number': '100',
+        'women_helpline': '👩 Women Helpline',
+        'women_number': '181',
+        'legal_aid': '📋 Legal Aid Services',
+        'legal_aid_number': '15100',
+        'emergency_help': 'Emergency Assistance',
+    },
+    'hi': {
+        'title': '📞 आपातकाल और सहायता',
+        'police': '🚨 पुलिस',
+        'police_number': '100',
+        'women_helpline': '👩 महिला सहायता लाइन',
+        'women_number': '181',
+        'legal_aid': '📋 कानूनी सहायता सेवाएं',
+        'legal_aid_number': '15100',
+        'emergency_help': 'आपातकालीन सहायता',
+    },
+    'bn': {
+        'title': '📞 জরুরি এবং সহায়তা',
+        'police': '🚨 পুলিশ',
+        'police_number': '100',
+        'women_helpline': '👩 মহিলা সহায়তা লাইন',
+        'women_number': '181',
+        'legal_aid': '📋 আইনি সহায়তা সেবা',
+        'legal_aid_number': '15100',
+        'emergency_help': 'জরুরি সহায়তা',
+    },
+    'ta': {
+        'title': '📞 அவசரம் மற்றும் உதவி',
+        'police': '🚨 போலீஸ்',
+        'police_number': '100',
+        'women_helpline': '👩 பெண்கள் உதவி லைன்',
+        'women_number': '181',
+        'legal_aid': '📋 சட்டக் கூலி சேவைகள்',
+        'legal_aid_number': '15100',
+        'emergency_help': 'அவசரகால உதவி',
+    },
+    'te': {
+        'title': '📞 అత్యవసర మరియు సహాయం',
+        'police': '🚨 పోలీసు',
+        'police_number': '100',
+        'women_helpline': '👩 మహిళల సహాయ లైన్',
+        'women_number': '181',
+        'legal_aid': '📋 చట్ట సహాయ సేవలు',
+        'legal_aid_number': '15100',
+        'emergency_help': 'అత్యవసర సహాయం',
+    },
+}
+
+# Help and guidance messages
+HELP_MESSAGES: Dict[str, Dict[str, str]] = {
+    'en': {
+        'voice_input_help': 'Click the microphone button and speak your legal question clearly. The system will transcribe your speech to text.',
+        'language_selection_help': 'Select your preferred language for input and output. Your responses will be translated accordingly.',
+        'query_examples': 'For best results, ask specific questions like: "What is the punishment for theft?" or "Explain Section 504 IPC"',
+        'document_upload_help': 'You can upload documents related to your case for better results.',
+        'accuracy_note': 'Results are based on Indian Penal Code (IPC) and Bharatiya Nyaya Sanhita (BNS). Always consult a qualified lawyer for legal advice.',
+    },
+    'hi': {
+        'voice_input_help': 'माइक्रोफोन बटन पर क्लिक करें और अपना कानूनी प्रश्न स्पष्ट रूप से कहें। सिस्टम आपकी बातचीत को पाठ में परिवर्तित करेगा।',
+        'language_selection_help': 'अपनी पसंदीदा भाषा इनपुट और आउटपुट के लिए चुनें। आपकी प्रतिक्रिया तदनुसार अनुवादित की जाएगी।',
+        'query_examples': 'सर्वोत्तम परिणामों के लिए, विशिष्ट प्रश्न पूछें जैसे: "चोरी के लिए सजा क्या है?" या "भारतीय दंड संहिता की धारा 504 की व्याख्या करें"',
+        'document_upload_help': 'आप अपने मामले से संबंधित दस्तावेज़ अपलोड कर सकते हैं बेहतर परिणामों के लिए।',
+        'accuracy_note': 'परिणाम भारतीय दंड संहिता (IPC) और भारतीय न्याय संहिता (BNS) पर आधारित हैं। कानूनी सलाह के लिए हमेशा एक योग्य वकील से परामर्श लें।',
+    },
+}
+
+
+def get_string(key: str, language: str = 'en', category: str = 'general') -> str:
+    """
+    Get translated string for a given key
+    
+    Args:
+        key: String key to retrieve
+        language: Language code (default: 'en')
+        category: Category of strings ('general', 'legal', 'help')
+        
+    Returns:
+        Translated string or original key if not found
+    """
+    if category == 'general':
+        strings = LANGUAGE_STRINGS.get(language, LANGUAGE_STRINGS['en'])
+        return strings.get(key, LANGUAGE_STRINGS['en'].get(key, key))
+    elif category == 'legal':
+        terms = LEGAL_TERMS.get(language, LEGAL_TERMS['en'])
+        return terms.get(key, LEGAL_TERMS['en'].get(key, key))
+    elif category == 'help':
+        messages = HELP_MESSAGES.get(language, HELP_MESSAGES['en'])
+        return messages.get(key, HELP_MESSAGES['en'].get(key, key))
+    return key
+
+
+def get_all_strings(language: str = 'en') -> Dict[str, str]:
+    """Get all strings for a language"""
+    strings = LANGUAGE_STRINGS.get(language, LANGUAGE_STRINGS['en'])
+    legal_terms = LEGAL_TERMS.get(language, LEGAL_TERMS['en'])
+    help_messages = HELP_MESSAGES.get(language, HELP_MESSAGES['en'])
+    
+    return {**strings, **legal_terms, **help_messages}
+
+
+def get_supported_languages_list() -> list:
+    """Get list of supported languages"""
+    return list(LANGUAGE_STRINGS.keys())
