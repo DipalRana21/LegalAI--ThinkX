@@ -7,7 +7,7 @@ from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
 
 # ⚠️ PASTE YOUR KEY HERE
-os.environ["GOOGLE_API_KEY"] = "AIzaSyAlHWmiBT6sT-oTnN6sAM-5soNjayfXOd8"
+os.environ["GOOGLE_API_KEY"] = "AIzaSyCXBVZqJjjST34JDdY5vw4tDx76u5ihTNs"
 
 def get_answer(query):
     # 1. Connect to Database

@@ -440,3 +440,4 @@ if prompt := st.chat_input("Enter your legal query here..."):
             
         except Exception as e:
             message_placeholder.error(f"⚠️ System Error: {str(e)}")
+
