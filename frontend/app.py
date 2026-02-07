@@ -259,6 +259,20 @@ footer {visibility: hidden;}
 /* Voice button styling */
 .voice-section { padding: 0.5rem 0; }
 
+/* Chat flow: messages top-to-bottom, input below messages */
+#chat-bottom-anchor { height: 1px; }
+
+/* ChatGPT-style main container */
+.main .block-container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* Sticky header styling for quick topics */
+.stButton > button {
+    font-size: 0.9rem !important;
+}
+
 /* Card-based answer sections */
 .answer-card {
     background: white;
@@ -276,6 +290,123 @@ footer {visibility: hidden;}
 .chat-history-item { padding: 0.5rem; border-radius: 8px; margin: 0.25rem 0; cursor: pointer; }
 .chat-history-item:hover { background: #f1f5f9; }
 .chat-history-item.active { background: #dbeafe; border-left: 3px solid #0f3460; }
+
+/* Quick Topics Cards - Perfectly Styled */
+.quick-topics-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: flex-start;
+    margin: 1rem 0;
+}
+.quick-topic-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border: 2px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 0.9rem 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 8px rgba(15, 52, 96, 0.06);
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: #0f3460;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.quick-topic-card:hover {
+    background: linear-gradient(135deg, #0f3460 0%, #1a4a7a 100%);
+    color: white;
+    border-color: #f59e0b;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(15, 52, 96, 0.2);
+}
+.quick-topic-icon {
+    font-size: 1.2rem;
+}
+
+/* Pagination Styling */
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 1.5rem 0;
+    flex-wrap: wrap;
+}
+.pagination-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    background: white;
+    color: #0f3460;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+.pagination-btn:hover {
+    background: #0f3460;
+    color: white;
+    border-color: #0f3460;
+}
+.pagination-btn.active {
+    background: #0f3460;
+    color: white;
+    border-color: #0f3460;
+}
+.pagination-info {
+    font-size: 0.85rem;
+    color: #64748b;
+    margin: 0 0.5rem;
+}
+
+/* Help/About Pages */
+.page-header {
+    background: linear-gradient(135deg, #0f3460 0%, #1e3a5f 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 16px;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 30px rgba(15, 52, 96, 0.2);
+}
+.page-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+.page-subtitle {
+    font-size: 1rem;
+    opacity: 0.9;
+}
+.info-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border-left: 4px solid #f59e0b;
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin: 1rem 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+.info-card-title {
+    font-weight: 600;
+    color: #0f3460;
+    margin-bottom: 0.5rem;
+    font-size: 1.05rem;
+}
+.scenario-card {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border-left: 4px solid #f59e0b;
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin: 0.75rem 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.1);
+}
+.scenario-card:hover {
+    transform: translateX(5px);
+    box-shadow: 0 6px 16px rgba(245, 158, 11, 0.2);
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -300,6 +431,14 @@ if "chat_sessions" not in st.session_state:
     st.session_state.chat_sessions = []
 if "current_session_id" not in st.session_state:
     st.session_state.current_session_id = None
+if "current_page" not in st.session_state:
+    st.session_state.current_page = "chat"  # chat, help, about
+if "scenario_page" not in st.session_state:
+    st.session_state.scenario_page = 1
+if "help_page" not in st.session_state:
+    st.session_state.help_page = 1
+if "about_page" not in st.session_state:
+    st.session_state.about_page = 1
 
 # Chat persistence path
 CHAT_STORAGE_PATH = parent_dir / "chat_history.json"
@@ -609,7 +748,38 @@ def get_shuffled_scenarios():
     scenarios = SCENARIO_TEMPLATES.copy()
     random.seed(st.session_state.card_shuffle_seed + 1)
     random.shuffle(scenarios)
-    return scenarios[:6]  # Show 6 at a time, different each session
+    return scenarios
+
+
+def paginate_items(items, page_num, items_per_page=4):
+    """Paginate a list of items. Returns (paginated_items, total_pages)"""
+    total_pages = (len(items) + items_per_page - 1) // items_per_page
+    start_idx = (page_num - 1) * items_per_page
+    end_idx = start_idx + items_per_page
+    return items[start_idx:end_idx], total_pages
+
+
+def render_pagination(current_page, total_pages, session_state_key):
+    """Render pagination controls"""
+    cols = st.columns([1, 1, 1, 1, 1])
+    with cols[0]:
+        if current_page > 1:
+            if st.button("⬅️ Previous", use_container_width=True, key=f"{session_state_key}_prev"):
+                st.session_state[session_state_key] = current_page - 1
+                st.rerun()
+        else:
+            st.write("")
+    
+    with cols[2]:
+        st.markdown(f"<div style='text-align: center; padding: 0.5rem; color: #64748b; font-weight: 500;'>Page {current_page} of {total_pages}</div>", unsafe_allow_html=True)
+    
+    with cols[4]:
+        if current_page < total_pages:
+            if st.button("Next ➡️", use_container_width=True, key=f"{session_state_key}_next"):
+                st.session_state[session_state_key] = current_page + 1
+                st.rerun()
+        else:
+            st.write("")
 
 
 def process_query(query_text: str) -> bool:
@@ -631,82 +801,222 @@ def process_query(query_text: str) -> bool:
     return True
 
 
+def render_help_page():
+    """Render Help/FAQ Page with pagination"""
+    help_items = [
+        {
+            "title": "❓ How do I ask a legal question?",
+            "description": "Simply type your legal question in the chat box at the bottom of the page and press Enter. The AI will search through Indian legal documents and provide relevant information."
+        },
+        {
+            "title": "🎭 What are Scenario Templates?",
+            "description": "Scenario templates help you ask 'what-if' questions about legal situations. They provide common legal scenarios in India that you can learn from."
+        },
+        {
+            "title": "📚 Which laws are covered?",
+            "description": "NyayaSahayak covers Indian Penal Code (IPC), Bharatiya Nyaya Sanhita (BNS), Code of Criminal Procedure (CrPC), Consumer Protection Act, IT Act, and more."
+        },
+        {
+            "title": "🔍 Can I see source documents?",
+            "description": "Yes! Click 'View Source Evidence' under each answer to see the legal documents and specific sections that were used to generate the response."
+        },
+        {
+            "title": "🎤 How do I use voice input?",
+            "description": "Enable voice input in the sidebar (if available). Choose your language (English or हिंदी), click the microphone button, and speak your question."
+        },
+        {
+            "title": "💾 How is my chat history saved?",
+            "description": "Your chat history is automatically saved locally on your device. You can view previous conversations in the 'Chat History' section of the sidebar."
+        },
+        {
+            "title": "⚖️ Is this legal advice?",
+            "description": "No. NyayaSahayak is for educational purposes only. It simplifies legal concepts but is NOT a substitute for professional legal counsel. Always consult a lawyer for actual legal matters."
+        },
+        {
+            "title": "🔐 Is my data secure?",
+            "description": "Your data is processed locally. Chat histories are stored on your device. We do not upload your questions to external servers."
+        }
+    ]
+    
+    st.markdown("""
+    <div class="page-header">
+        <div class="page-title">❓ Help & Frequently Asked Questions</div>
+        <div class="page-subtitle">Everything you need to know about NyayaSahayak</div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    paginated_items, total_pages = paginate_items(help_items, st.session_state.help_page, items_per_page=3)
+    
+    for item in paginated_items:
+        st.markdown(f"""
+        <div class="info-card">
+            <div class="info-card-title">{item['title']}</div>
+            <div>{item['description']}</div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    st.markdown("---")
+    render_pagination(st.session_state.help_page, total_pages, "help_page")
+
+
+def render_about_page():
+    """Render About Page with pagination"""
+    about_sections = [
+        {
+            "title": "🏛️ What is NyayaSahayak?",
+            "description": "NyayaSahayak means 'Legal Helper' in Sanskrit. It's an AI-powered legal assistant designed specifically for Indian laws, making legal information accessible to everyone."
+        },
+        {
+            "title": "🎯 Our Mission",
+            "description": "To democratize legal knowledge in India by providing instant access to information about Indian laws in a simple, understandable format. We believe everyone deserves to understand their legal rights."
+        },
+        {
+            "title": "🔬 How does it work?",
+            "description": "NyayaSahayak uses Retrieval-Augmented Generation (RAG) technology. When you ask a question, it searches a database of Indian legal documents and uses AI to generate an accurate answer with evidence."
+        },
+        {
+            "title": "📖 Technology Stack",
+            "description": "Built with Python, Streamlit, LangChain, FAISS Vector Database, and Google Gemini AI. Open-source and designed for educational purposes."
+        },
+        {
+            "title": "👥 Who built this?",
+            "description": "NyayaSahayak was created for the ThinkX Hackathon. Our team of developers and legal enthusiasts combined their passion for technology and justice."
+        },
+        {
+            "title": "⚠️ Important Disclaimer",
+            "description": "NyayaSahayak is NOT a licensed legal service provider. Information provided is for educational purposes. Always consult a qualified lawyer for legal advice. We are not responsible for any decisions made based on this tool."
+        },
+        {
+            "title": "🌍 Open Source",
+            "description": "NyayaSahayak is built with open-source technologies. We're committed to transparency and community contribution."
+        },
+        {
+            "title": "📞 Contact & Support",
+            "description": "For feedback, bug reports, or suggestions, please reach out to our team. Your input helps us improve the platform for everyone in India."
+        }
+    ]
+    
+    st.markdown("""
+    <div class="page-header">
+        <div class="page-title">ℹ️ About NyayaSahayak</div>
+        <div class="page-subtitle">Your AI-Powered Legal Assistant for Indian Laws</div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    paginated_items, total_pages = paginate_items(about_sections, st.session_state.about_page, items_per_page=3)
+    
+    for item in paginated_items:
+        st.markdown(f"""
+        <div class="info-card">
+            <div class="info-card-title">{item['title']}</div>
+            <div>{item['description']}</div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    st.markdown("---")
+    render_pagination(st.session_state.about_page, total_pages, "about_page")
+
+
 def main():
     """Main application"""
     
-    # Hero Section
-    st.markdown("""
-    <div class="hero-section">
-        <div class="hero-title">⚖️ NyayaSahayak</div>
-        <div class="hero-subtitle">AI-Powered Legal Assistant for Indian Laws • BNS, IPC, CrPC, Consumer Protection & More</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-    # Sidebar
+    # Sidebar Navigation
     with st.sidebar:
-        st.markdown("### ⚙️ Controls")
-        if st.button("➕ New Chat", use_container_width=True, type="primary"):
-            create_new_chat()
-            st.session_state.pending_query = None
-            st.rerun()
-        if st.button("🗑️ Clear This Chat", use_container_width=True):
-            clear_current_chat()
-            st.rerun()
-
-        st.markdown("### 📜 Chat History")
-        sessions = load_chat_sessions()
-        if sessions:
-            for s in sessions:
-                is_active = s["id"] == st.session_state.current_session_id
-                btn_label = f"{'▶ ' if is_active else ''}{s['title']}"
-                if st.button(btn_label, key=f"hist_{s['id']}", use_container_width=True):
-                    st.session_state.current_session_id = s["id"]
-                    st.rerun()
-        else:
-            st.caption("No chats yet")
-
-        st.markdown("---")
-        st.markdown("### 📖 Query Mode")
-        mode = st.radio(
-            "How would you like to ask?",
-            ["General Question", "Scenario-Based (What if...)", "Specific Article/Section"],
-            label_visibility="collapsed",
-            key="query_mode_radio"
-        )
-        if "Scenario" in mode:
-            st.session_state.query_mode = "scenario"
-        elif "Article" in mode:
-            st.session_state.query_mode = "article"
-        else:
-            st.session_state.query_mode = "general"
-
-        st.markdown("---")
-        if VOICE_AVAILABLE:
-            st.markdown("### 🎤 Voice Input")
-            voice_lang = st.radio(
-                "Speak in:",
-                ["English", "हिंदी (Hindi)"],
-                index=0 if st.session_state.voice_lang == "en" else 1,
-                key="voice_lang_radio"
-            )
-            st.session_state.voice_lang = "en" if "English" in voice_lang else "hi"
-            voice_text = speech_to_text(
-                language=st.session_state.voice_lang,
-                start_prompt="🎤 Speak",
-                stop_prompt="⏹️ Stop",
-                just_once=True,
-                use_container_width=True,
-                key="voice_stt"
-            )
-            if voice_text:
-                st.session_state.pending_query = voice_text
+        st.markdown("### 🧭 Navigation")
+        
+        # Page selector
+        page_cols = st.columns(3)
+        with page_cols[0]:
+            if st.button("💬 Chat", use_container_width=True, key="page_chat"):
+                st.session_state.current_page = "chat"
                 st.rerun()
+        with page_cols[1]:
+            if st.button("❓ Help", use_container_width=True, key="page_help"):
+                st.session_state.current_page = "help"
+                st.rerun()
+        with page_cols[2]:
+            if st.button("ℹ️ About", use_container_width=True, key="page_about"):
+                st.session_state.current_page = "about"
+                st.rerun()
+        
         st.markdown("---")
-        st.markdown("### 📞 Emergency")
-        st.info("**Police:** 100\n**Women Helpline:** 181\n**Legal Aid:** 15100")
-        st.markdown("---")
-        st.caption("⚠️ Educational purposes only. Consult a lawyer for legal advice.")
+        
+        if st.session_state.current_page == "chat":
+            st.markdown("### ⚙️ Controls")
+            if st.button("➕ New Chat", use_container_width=True, type="primary"):
+                create_new_chat()
+                st.session_state.pending_query = None
+                st.rerun()
+            if st.button("🗑️ Clear This Chat", use_container_width=True):
+                clear_current_chat()
+                st.rerun()
 
+            st.markdown("### 📜 Chat History")
+            sessions = load_chat_sessions()
+            if sessions:
+                for s in sessions:
+                    is_active = s["id"] == st.session_state.current_session_id
+                    btn_label = f"{'▶ ' if is_active else ''}{s['title']}"
+                    if st.button(btn_label, key=f"hist_{s['id']}", use_container_width=True):
+                        st.session_state.current_session_id = s["id"]
+                        st.rerun()
+            else:
+                st.caption("No chats yet")
+
+            st.markdown("---")
+            st.markdown("### 📖 Query Mode")
+            mode = st.radio(
+                "How would you like to ask?",
+                ["General Question", "Scenario-Based (What if...)", "Specific Article/Section"],
+                label_visibility="collapsed",
+                key="query_mode_radio"
+            )
+            if "Scenario" in mode:
+                st.session_state.query_mode = "scenario"
+            elif "Article" in mode:
+                st.session_state.query_mode = "article"
+            else:
+                st.session_state.query_mode = "general"
+
+            st.markdown("---")
+            if VOICE_AVAILABLE:
+                st.markdown("### 🎤 Voice Input")
+                voice_lang = st.radio(
+                    "Speak in:",
+                    ["English", "हिंदी (Hindi)"],
+                    index=0 if st.session_state.voice_lang == "en" else 1,
+                    key="voice_lang_radio"
+                )
+                st.session_state.voice_lang = "en" if "English" in voice_lang else "hi"
+                voice_text = speech_to_text(
+                    language=st.session_state.voice_lang,
+                    start_prompt="🎤 Speak",
+                    stop_prompt="⏹️ Stop",
+                    just_once=True,
+                    use_container_width=True,
+                    key="voice_stt"
+                )
+                if voice_text:
+                    st.session_state.pending_query = voice_text
+                    st.rerun()
+            st.markdown("---")
+            st.markdown("### 📞 Emergency")
+            st.info("**Police:** 100\n**Women Helpline:** 181\n**Legal Aid:** 15100")
+            st.markdown("---")
+            st.caption("⚠️ Educational purposes only. Consult a lawyer for legal advice.")
+        else:
+            st.markdown("---")
+            st.caption("💡 Navigate to Chat, Help, or About sections using the buttons above.")
+
+    # Page Content Display
+    if st.session_state.current_page == "help":
+        render_help_page()
+        return
+    elif st.session_state.current_page == "about":
+        render_about_page()
+        return
+
+    # ============== CHAT PAGE ==============
     # Main content
     if not st.session_state.vector_store_initialized:
         st.info("👈 Click below to initialize the system.")
@@ -725,86 +1035,145 @@ def main():
         if process_query(q):
             st.rerun()
 
-    # ============== Chat Display - OLDEST UP, NEWEST DOWN + CARD-BASED ANSWERS ==============
-    messages = get_session_messages(st.session_state.current_session_id or "") if st.session_state.current_session_id else []
-    if messages:
-        st.markdown("### 📜 Conversation")
-        chat_container = st.container()
-        with chat_container:
-            for i, (q, a, sources) in enumerate(messages):
-                with st.container():
-                    q_safe = html.escape(q).replace("\n", "<br>")
-                    st.markdown(f'<div class="user-bubble"><strong>You asked:</strong><br>{q_safe}</div>', unsafe_allow_html=True)
-                    render_answer_cards(a)
-                    render_jargon_explainer(a)
-                    with st.expander("📎 View Source Evidence", expanded=(i == len(messages) - 1)):
-                        render_source_cards(sources)
-                st.markdown("---")
+    # ============== STICKY HEADER - Quick Legal Topics (ChatGPT Style) ==============
+    st.markdown("""
+    <style>
+    .sticky-header-container {
+        position: sticky;
+        top: 60px;
+        background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+        z-index: 999;
+        padding: 1.5rem 1rem;
+        border-bottom: 2px solid #e2e8f0;
+        margin: 0 -1rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+    .sticky-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #0f3460;
+        margin-bottom: 0.75rem;
+    }
+    .quick-topics-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+    }
+    </style>
+    
+    <div class="sticky-header-container">
+        <div class="sticky-title">📋 Quick Legal Topics</div>
+    </div>
+    """, unsafe_allow_html=True)
 
-        # Auto-scroll to bottom
+    # Render quick topic buttons in a compact grid
+    shuffled_cats = get_shuffled_categories()
+    cols = st.columns(min(8, len(shuffled_cats)))
+    for i, cat in enumerate(shuffled_cats):
+        with cols[i % 8]:
+            if st.button(f"{cat['icon']} {cat['title']}", key=f"cat_{cat['id']}_{i}", use_container_width=True, help=cat['desc']):
+                st.session_state.pending_query = cat["query"]
+                st.rerun()
+    
+    # Surprise me + Refresh topics (dynamic)
+    col_surprise, col_refresh, col_space = st.columns([1, 1, 6])
+    with col_surprise:
+        if st.button("✨ Surprise me!", use_container_width=True, key="surprise_me"):
+            all_queries = [c["query"] for c in LEGAL_CATEGORIES] + get_shuffled_scenarios()
+            st.session_state.pending_query = random.choice(all_queries)
+            st.rerun()
+    with col_refresh:
+        if st.button("🔄 Refresh", use_container_width=True, key="refresh_topics"):
+            st.session_state.card_shuffle_seed = random.randint(0, 99999)
+            st.rerun()
+
+    st.markdown("---")
+
+    # ============== Chat Display - st.chat_message for normal AI flow (center, ChatGPT style) ==============
+    messages = get_session_messages(st.session_state.current_session_id or "") if st.session_state.current_session_id else []
+    
+    # Show hero section only if no messages (like ChatGPT)
+    if not messages:
+        st.markdown("""
+        <div class="hero-section">
+            <div class="hero-title">⚖️ How can I help?</div>
+            <div class="hero-subtitle">Ask anything about Indian Laws • BNS, IPC, CrPC, Consumer Protection & More</div>
+        </div>
+        """, unsafe_allow_html=True)
+    else:
+        st.markdown("### 📜 Conversation")
+    
+    # Messages in st.chat_message - oldest at top, newest at bottom, auto-scrolling handled
+    for i, (q, a, sources) in enumerate(messages):
+        with st.chat_message("user"):
+            st.markdown(q)
+        with st.chat_message("assistant"):
+            render_answer_cards(a)
+            render_jargon_explainer(a)
+            with st.expander("📎 View Source Evidence", expanded=(i == len(messages) - 1)):
+                render_source_cards(sources)
+
+    # Auto-scroll to bottom when messages exist - keeps newest visible, older msgs scroll up
+    if messages:
+        st.markdown('<div id="chat-bottom-anchor"></div>', unsafe_allow_html=True)
         try:
             import streamlit.components.v1 as components
             components.html("""
             <script>
             (function(){
-                try {
-                    var p = window.parent;
-                    var c = p.document.querySelector('[data-testid="stAppViewContainer"]');
-                    if (c) { c.scrollTop = c.scrollHeight; }
-                    else { p.scrollTo(0, p.document.body.scrollHeight); }
-                } catch(e){}
+                function scrollToBottom() {
+                    try {
+                        var p = window.parent;
+                        var container = p.document.querySelector('[data-testid="stAppViewContainer"]');
+                        if (container) {
+                            container.scrollTop = container.scrollHeight;
+                        }
+                        var body = p.document.body;
+                        if (body) body.scrollTop = body.scrollHeight;
+                        if (p.document.documentElement) p.document.documentElement.scrollTop = p.document.documentElement.scrollHeight;
+                    } catch(e) {}
+                }
+                scrollToBottom();
+                setTimeout(scrollToBottom, 100);
+                setTimeout(scrollToBottom, 300);
             })();
             </script>
             """, height=0)
         except Exception:
             pass
 
-    # ============== Dynamic Quick Category Cards ==============
-    st.markdown("### 📋 Quick Legal Topics")
-    shuffled_cats = get_shuffled_categories()
-    cols = st.columns(4)
-    for i, cat in enumerate(shuffled_cats):
-        with cols[i % 4]:
-            if st.button(f"{cat['icon']} **{cat['title']}**\n\n{cat['desc']}", key=f"cat_{cat['id']}_{i}", use_container_width=True):
-                st.session_state.pending_query = cat["query"]
-                st.rerun()
-    # Surprise me + Refresh topics (dynamic)
-    col_surprise, col_refresh = st.columns(2)
-    with col_surprise:
-        if st.button("✨ Surprise me! Random question", use_container_width=True, key="surprise_me"):
-            all_queries = [c["query"] for c in LEGAL_CATEGORIES] + get_shuffled_scenarios()
-            st.session_state.pending_query = random.choice(all_queries)
-            st.rerun()
-    with col_refresh:
-        if st.button("🔄 Refresh topics", use_container_width=True, key="refresh_topics"):
-            st.session_state.card_shuffle_seed = random.randint(0, 99999)
-            st.rerun()
-
-    # Dynamic Scenario templates
-    if st.session_state.query_mode == "scenario":
-        st.markdown("### 🎭 Scenario Templates")
-        shuffled_scenarios = get_shuffled_scenarios()
-        scenario_cols = st.columns(2)
-        for i, scenario in enumerate(shuffled_scenarios):
-            with scenario_cols[i % 2]:
-                btn_text = (scenario[:55] + "…") if len(scenario) > 55 else scenario
-                if st.button(btn_text, key=f"scenario_{i}", use_container_width=True):
-                    st.session_state.pending_query = scenario
-                    st.rerun()
-
+    # ============== Chat Input at Bottom (ChatGPT Style) ==============
     st.markdown("---")
-    st.markdown("### 💬 Ask Your Legal Question")
-
-    # ============== Chat input - submits on Enter key ==============
     chat_msg = st.chat_input("Type your question and press **Enter** to search...")
     if chat_msg:
         if process_query(chat_msg):
             st.rerun()
 
-    st.caption("💡 Press **Enter** to send • Use 🎤 Voice in sidebar for Hindi/English • Try 'Section 420 IPC'")
+    st.caption("💡 Press **Enter** to send • Your questions are processed through legal documents")
+
+    # Dynamic Scenario templates with pagination
+    if st.session_state.query_mode == "scenario" and not messages:
+        st.markdown("### 🎭 Scenario Templates")
+        all_scenarios = get_shuffled_scenarios()
+        paginated_scenarios, total_pages = paginate_items(all_scenarios, st.session_state.scenario_page, items_per_page=4)
+        
+        scenario_cols = st.columns(2)
+        for i, scenario in enumerate(paginated_scenarios):
+            with scenario_cols[i % 2]:
+                btn_text = (scenario[:45] + "…") if len(scenario) > 45 else scenario
+                if st.button(btn_text, key=f"scenario_{i}", use_container_width=True):
+                    st.session_state.pending_query = scenario
+                    st.rerun()
+        
+        st.markdown("---")
+        render_pagination(st.session_state.scenario_page, total_pages, "scenario_page")
 
     # Extra: Download current chat as text
     if messages:
+        st.markdown("---")
         chat_text = ""
         for q, a, _ in messages:
             chat_text += f"Q: {q}\n\nA: {a}\n\n---\n\n"
