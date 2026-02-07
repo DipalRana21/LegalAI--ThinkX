@@ -14,11 +14,10 @@ GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY", "")
 
 # PDF Configuration - PDFs are in project root
 PDF_DIRECTORY = "data"
-# PDF file paths (use absolute paths or relative paths from project root)
+# PDF file paths (relative to project root - auto-discovers)
 PDF_FILES = [
-    r"E:\SEM-6\Hack\250883_english_01042024.pdf",  # Main legal document
-    # Add more PDF files here if needed
-    # r"E:\SEM-6\Hack\BNS2023.pdf",
+    os.path.join(parent_dir, "250883_english_01042024.pdf"),  # BNS/Bharatiya Nyaya Sanhita
+    os.path.join(parent_dir, "BNS2023.pdf"),
 ]
 # Convert relative paths to absolute paths and verify files exist
 valid_pdf_files = []
